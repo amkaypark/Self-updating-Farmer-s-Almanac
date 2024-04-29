@@ -1,55 +1,19 @@
-# Boilerplate for Flask app dev
+from flask import Flask, render_template, url_for
 
-# Import
-from flask import Flask, render_template, request
-import logging
-from logging import Formatter, FileHandler
-from forms import *
-import os
+app = Flask(__name__, static_url_path='/static')
 
-# Config
-app = Flask(__name__)
-app.config.from_object('config')
-
-# Controllers
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('pages/placeholder.home.html')
+    # Render an HTML template and return
+    return render_template('index.html')
 
+@app.route('/for_farmers')
+def for_farmers():
+    return render_template('forfarmers.html')
 
-@app.route('/about')
-def about():
-    return render_template('pages/placeholder.about.html')
+@app.route('/for_planters')
+def for_planters():
+    return render_template('forplanters.html')
 
-# Error handlers.
-@app.errorhandler(500)
-def internal_error(error):
-    #db_session.rollback()
-    return render_template('errors/500.html'), 500
-
-
-@app.errorhandler(404)
-def not_found_error(error):
-    return render_template('errors/404.html'), 404
-
-if not app.debug:
-    file_handler = FileHandler('error.log')
-    file_handler.setFormatter(
-        Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]')
-    )
-    app.logger.setLevel(logging.INFO)
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.info('errors')
-
-#Launch
-# Default port:
 if __name__ == '__main__':
-    app.run()
-
-# Or specify port manually:
-'''
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
-'''
+    app.run(debug=True)
